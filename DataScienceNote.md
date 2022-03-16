@@ -28,7 +28,7 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 ## 商業智慧與資料探勘的循環
 
-<img src="/home/xuan/.config/Typora/typora-user-images/image-20220316140522608.png" alt="image-20220316140522608" style="zoom:50%;" />
+<img src="https://i.imgur.com/FIeEc8S.png" alt="image-20220316140522608" style="zoom:50%;" />
 
 
 
@@ -43,7 +43,7 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 5. Operational BI
 6. Business perfomance management (BPM)
 
-![image-20220316130739301](/home/xuan/.config/Typora/typora-user-images/image-20220316130739301.png)
+![image-20220316130739301](https://i.imgur.com/1nQQ6Dl.png)
 
 
 
@@ -110,13 +110,13 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 
 
-![Untitled Diagram.drawio](/home/xuan/Downloads/Untitled Diagram.drawio.png)
+![Untitled Diagram.drawio](https://i.imgur.com/MZadEmp.png)
 
 
 
 ## 資料與變數
 
-![image-20210920181340776](https://i.imgur.com/TYI2jmt.png)
+![image-20210920181340776](https://i.imgur.com/urFrS3t.png)
 
 | 名詞   | 意義                                                         |
 | ------ | ------------------------------------------------------------ |
@@ -132,7 +132,7 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 衡量尺度決定資料包含的資訊量，也指出資料彙整的或統計分析時的最適方法。
 
-##### 
+
 
 ### 名目尺度(nominal scale)
 
@@ -142,7 +142,7 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 也因為名目尺度的意義是比較等於或不等於，因此詢問「WTO會員國與WTO觀察員哪個比較大」或者「兩個國家的WTO狀態相加等於多少」是完全毫無意義的行為。
 
-##### 
+
 
 ### 順序尺度(ordinal scale)
 
@@ -150,7 +150,7 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 例如上表的Fitch Rating，其中AAA代表最好，F代表最差，因此可以根據評等排出高低，所以是順序尺度。
 
-##### 
+
 
 ### 區間尺度(interval scale)
 
@@ -158,7 +158,7 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 例如統測成績就是一個區間尺度，假設有三位學生的統測成績為699、560、350，則我們可以由高到低依序排序來衡量出成績表現的優劣，而他們的差距也存在意義，例如699的學生比560的學生高出139分。
 
-##### 
+
 
 ### 比例尺度(ratio scale)
 
@@ -202,7 +202,9 @@ Author: [Uriah Xuan](https://ntut-xuan.github.io/) (109 NTUT CSIE)
 
 我們可以利用$z$分數去偵測離群值，一般來說，約有$99.7%$的資料會落在標準差$\pm3$內，我們會希望資料的標準差與中心的距離不超過$3$。
 
-另一種方式是使用第一分位、第三分位與四分位距來做偵測，能夠給定一個區間來要求值必須要在這個區間內，定義如下 $$ \text{Lower Limit} = Q_1 - 1.5(\text{IQR}) \ \text{Upper Limit} = Q_3 + 1.5(\text{IQR}) $$
+另一種方式是使用第一分位、第三分位與四分位距來做偵測，能夠給定一個區間來要求值必須要在這個區間內，定義如下：
+
+$\text{Lower Limit} = Q_1 - 1.5(\text{IQR}) \ \text{Upper Limit} = Q_3 + 1.5(\text{IQR}) $
 
 
 
