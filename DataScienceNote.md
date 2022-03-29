@@ -228,16 +228,6 @@ $\text{Lower Limit} = Q_1 - 1.5(\text{IQR}) \ \text{Upper Limit} = Q_3 + 1.5(\te
 
 主要使用樹狀結構，將一筆一筆的紀錄組織起來，適合一對多的資料組成關係，但無法直接表達多對多的關係。
 
-例如下表使用了階層式資料模型模擬了北科大的資料
-
-![image-20220329094413523](C:\Users\LAB1223\AppData\Roaming\Typora\typora-user-images\image-20220329094413523.png)
-
-我們使用以上的資料架構產出以下的階層式資料模型。
-
-![image-20220329094046989](C:\Users\LAB1223\AppData\Roaming\Typora\typora-user-images\image-20220329094046989.png)
-
-但可以發現，如果周小晴同時是學務處與教務處的同仁，資料處理起來就會有問題（樹不該有環）。
-
 
 
 ### 網路式資料模型
@@ -251,3 +241,107 @@ $\text{Lower Limit} = Q_1 - 1.5(\text{IQR}) \ \text{Upper Limit} = Q_3 + 1.5(\te
 ### 關聯式資料模型
 
 以表格來表達關係，每一列即為一個紀錄，通常會實體關聯圖作為輔助設計的依據。
+
+
+
+## SQL 查詢
+
+SQL 全名為 結構化查詢語言（Structured Query Language），對於資料庫來說，我們可以用 SQL 語法來進行查詢。
+
+![image-20220329170026823](C:\Users\LAB1223\AppData\Roaming\Typora\typora-user-images\image-20220329170026823.png)
+
+例如要從一張名為 Teacher 的資料表中，顯示出所有結果屬性，寫法可以寫成這樣。
+
+```sql
+SELECT * FROM Teacher
+```
+
+若要從這堆老師中選出其中一個名為王小軒的老師，可以寫成這樣。
+
+```sql
+SELECT * FROM Teacher WHERE name = '王小軒'
+```
+
+若只要得到王小軒老師的 ID，可以寫成這樣。
+
+```sql
+SELECT ID FROM Teacher WHERE name = '王小軒'
+```
+
+
+
+## 非結構化資料
+
+### 非結構化資料的介紹
+
+非結構化資料形式涵蓋了聲音、圖像、影像、文字等等。
+
+> [結構化資料 vs. 非結構化資料 | Pure Storage](https://www.purestorage.com/tw/knowledge/big-data/structured-vs-unstructured-data.html)
+
+
+
+### 非結構化資料的特性
+
+#### 數位化生成
+
+大部分由機器生成的資料，並不一定能夠整齊的被資料庫的欄位所對應，因此會使得資料庫變成多維度，且非常難以預測。
+
+
+
+#### 多模式
+
+資料經過蒐集之後，具有大量不同類別的資料，例如 e-mail、文檔、圖檔等等。
+
+
+
+#### 持續變動
+
+大量資料被生成、處理、分析與即時運算。
+
+
+
+#### 地理分散
+
+不同資料被儲存在不同的地方，來達成資安特性。
+
+
+
+> [結構化資料 vs. 非結構化資料 | Pure Storage](https://www.purestorage.com/tw/knowledge/big-data/structured-vs-unstructured-data.html)
+>
+> [Unified Fast File and Object: A New Category of Storage | Pure Storage](https://blog.purestorage.com/products/unified-fast-file-object-storage/)
+>
+> [Types and Examples of NoSQL Databases - Big Data Analytics News](https://bigdataanalyticsnews.com/types-examples-nosql-databases/)
+>
+> [淺談資料格式 — 結構化與非結構化資料. 進入大數據時代，資料成為挖掘商機的礦脈，對資料的管理不夠，想要利用大數據來開創新… | by 行銷資料科學 | Marketingdatascience | Medium](https://medium.com/marketingdatascience/%E6%B7%BA%E8%AB%87%E8%B3%87%E6%96%99%E6%A0%BC%E5%BC%8F-%E7%B5%90%E6%A7%8B%E5%8C%96%E8%88%87%E9%9D%9E%E7%B5%90%E6%A7%8B%E5%8C%96%E8%B3%87%E6%96%99-50c89a4b15e0)
+
+
+
+### 結構化與非結構資料化的比較
+
+|              |   結構化資料   | 非結構化資料 |
+| :----------: | :------------: | :----------: |
+|   呈現方面   |      表格      |   無法呈現   |
+|   處理方面   |    需正規化    |  不須正規化  |
+|     形式     | 有限的資料形式 |     不限     |
+| 儲存空間需求 |      較少      |     較大     |
+|     存取     |     較簡單     |    較困難    |
+
+
+
+## 資料探勘
+
+從一大群的資料中，利用技術（人工智慧、機器學習、統計學等等）探勘出有意義的資料。
+
+
+
+### 資料的探勘任務
+
+主要分成六種常見的任務。
+
+1. 異常檢測：辨識不尋常的資料，或針對錯誤資料進一步調查。
+2. 關聯規則學習：搜尋變數之間的關係。
+3. 聚類：在未知資料的結構下，發現資料的類別與結構，利用演算法將資料分成更多子集，讓子集的資料都有相似的一些屬性。
+4. 分類：對新的資料推廣成已知結構的任務，例如將一封新郵件分類成「正常郵件」與「垃圾郵件」，可利用決策樹來分析數據或輔助預測。
+5. 迴歸：試圖找到最小誤差的建模函式。
+6. 匯總：提供一個更緊湊的資料集表示，來生成視覺化或報表。
+
