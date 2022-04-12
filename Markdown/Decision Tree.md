@@ -89,6 +89,36 @@
 
 
 
+## 決策樹的 Overfitting 問題
+
+決策樹其中一個問題就是很容易 overfitting。
+
+
+
+### Overfitting 簡介
+
+Overfitting 就是過度擬合，也就是對於一個訓練資料集，只對資料集的資料有作用，不利於推廣更多資料。
+
+如果看不懂上面的文字，可以看下面找到的[一張圖](https://pbs.twimg.com/media/Ef5yDj2X0AIkHEe.jpg)。
+
+<img src="https://pbs.twimg.com/media/Ef5yDj2X0AIkHEe.jpg" alt="Jason Mayes on Twitter: &quot;The best way to explain #overfitting in  #MachineLearning. Well I am glad we cleared that up. #Fun #ML #TensorFlow  #Visual #TensorFlowJS https://t.co/nZZenunLFU&quot; / Twitter" style="zoom: 33%;" />
+
+由於只對資料集的資料有作用，因此若在預判不是資料集的資料時，很容易出現預判失敗的問題。
+
+
+
+### 迴避 Overfitting 的方法
+
+迴避 Overfitting 可以使用剪枝來迴避，分成先剪枝（prepruning）與後剪枝（postpruning）。
+
+1. 先剪枝：可以設定一個條件，使得後面的子樹停止構建，當前的節點變成葉節點。
+
+2. 後剪枝：先建照一個完整的決策樹，再將這個樹進行修剪。
+
+當然，資料集也很重要，所以如同 data mining 一樣，需要對資料集的品質有所把持。
+
+
+
 ## 決策樹演算法
 
 主要分成：ID3、CART、CHAID，這份筆記主要會講解 ID3、CART 演算法。
@@ -142,9 +172,9 @@ $$
 
 ### 範例
 
-以這張圖為範例，利用 ID3 來建立決策樹。
+以這個資料為範例，利用 ID3 來建立決策樹。
 
-![image-20220409235516253](https://i.imgur.com/1a5f48J.png)
+<img src="https://i.imgur.com/9PDEbrf.png" alt="image-20220412151903685" style="zoom:67%;" />
 
 首先先計算 $Entropy(Play)$，也就是
 
@@ -294,38 +324,28 @@ $IG(Wind) = Entropy(Rainy), Entropy(Rainy, Wind) = 0.97 - 0 = 0.97$
 
 > Reference: 
 >
-> 1. **https://ppt.cc/feiiIx**
+> 1. **https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0098450.s002&type=supplementary**
 > 2. https://www.youtube.com/watch?v=qrDzZMRm_Kw
 
 
 
-### CART 演算法
+### 演算法
 
 一個基於吉尼不純度係數 (Gini Impurity) 作為分割標準的分類演算法，先前提到的 ID3 是基於 Information Gain。
 
 演算法主要運行如下：
 
-1. 尋找最佳特徵分割方式，例如有 K 種特徵，必有 K-1 種分割方式，對於每一種分割方式算出吉尼不純度係數，
+1. 尋找最佳特徵分割方式，例如有 K 種特徵，必有 K-1 種分割方式，對於每一種分割方式算出吉尼不純度係數。
 
-   並選擇最大的吉尼不純度係數分割方式。
+2. 延續第一點，對於每一種特徵，算出每個特徵的吉尼不純度係數權重。
 
-2. 尋找最佳的節點分割方式
+3. 選擇最低的吉尼不純度係數進行分割。
 
-3. 繼續分割，直到達到結束條件。
-
-
-
-### CART - Entropy
-
-對於一個 CART 演算法，其 Entropy 算法與 ID3 相同，定義如下。
-$$
-Entropy(A) = - \sum^{m}_{k=1} p_k \log_2 (p_k)
-$$
-其中 $0 \le Entropy(A) \le 1$，當 $Entropy(A) = 0$ 時則代表完全分類，$Entropy(A) = 1$ 時則代表完全不分類。
+4. 重複1, 2, 3，直到達到結束條件。
 
 
 
-### CART - Gini Impurity
+### Gini Impurity
 
 對於一個 CART 演算法的分割標準，主要以吉尼不純度係數（Gini Impurity）來做參考標準，定義如下。
 $$
@@ -335,45 +355,234 @@ $$
 
 
 
-### CART - 範例
+### 範例
 
-> 待補
+以這個資料為範例，利用 CART 來建立決策樹。
 
-
-
-### CART - 迴歸樹
-
-> 待補
+<img src="https://i.imgur.com/9PDEbrf.png" alt="image-20220412151903685" style="zoom:67%;" />
 
 
 
-## 決策樹的 Overfitting 問題
+先考慮四種不同的分割方式
 
-決策樹其中一個問題就是很容易 overfitting。
+1. 考慮第一種 Outlook
+
+   $GI(Outlook, Sunny) = 1 - (\dfrac{2}{5})^2 - (\dfrac{3}{5})^2=0.48$
+
+   $GI(Outlook, Overcast) = 1 - (\dfrac{4}{4})^2-(\dfrac{0}{4})^2=0$
+
+   $GI(Outlook, Rainy) = 1-(\dfrac{3}{5})^2-(\dfrac{2}{5})^2=0.48$
+
+   $GI(Outlook) = P(Sunny)GI(Sunny) + P(Overcast)GI(Overcast) + P(Rainy)GI(Rainy)$
+
+   $= \dfrac{5}{14}\times 0.48 + \dfrac{4}{14}\times 0 + \dfrac{5}{14}\times 0.48 \approx 0.343$
+
+2. 考慮第二種 Temperature
+
+   $GI(Temperature, Hot) = 1 - (\dfrac{2}{4})^2 - (\dfrac{2}{4})^2 = 0.5$
+
+   $GI(Temperature, Mild) = 1 - (\dfrac{4}{6})^2 - (\dfrac{2}{6})^2 \approx 0.44$
+
+   $GI(Temperature, Cold) = 1 - (\dfrac{3}{4})^2 - (\dfrac{1}{4})^2 = 0.375$
+
+   $GI(Temperature) = \dfrac{4}{14}\times 0.5 + \dfrac{6}{14}\times 0.44 + \dfrac{4}{14}\times 0.375 \approx 0.439$
+
+3. 考慮第三種 Humidity
+
+   $GI(Humidity, High) = 1 - (\dfrac{3}{7})^2 - (\dfrac{4}{7})^2 \approx 0.49$
+
+   $GI(Humidity, Medium) = 1 - (\dfrac{6}{7})^2 - (\dfrac{1}{7})^2 \approx 0.245$
+
+   $GI(Humidity) = \dfrac{7}{14}\times 0.49 + \dfrac{7}{14}\times 0.245 = 0.3675$
+
+4. 考慮第四種 Wind
+
+   $GI(Wind, True) = 1 - (\dfrac{3}{6})^2 - (\dfrac{3}{6})^2 = 0.5$
+
+   $GI(Wind, False) = 1 - (\dfrac{6}{8})^2 - (\dfrac{2}{8})^2 = 0.375$ 
+
+   $GI(Wind) = \dfrac{6}{14} \times 0.5 + \dfrac{8}{14} \times 0.375 \approx 0.429$
+
+選擇最低的 GI 來當作分割標準，故選擇 Outlook 來當作分割節點。
+
+<img src="https://i.imgur.com/FoUGJ7e.png" alt="image-20220410135516360" style="zoom:67%;" />
 
 
 
-### Overfitting 簡介
+考慮固定 Sunny，計算剩餘的 Temperature, Humidity, Wind。
 
-Overfitting 就是過度擬合，也就是對於一個訓練資料集，只對資料集的資料有作用，不利於推廣更多資料。
+1. 考慮 Temperature
 
-如果看不懂上面的文字，可以看下面找到的[一張圖](https://pbs.twimg.com/media/Ef5yDj2X0AIkHEe.jpg)。
+   $GI(Temperature, Hot) = 1 - (\dfrac{0}{2})^2 - (\dfrac{2}{2})^2 = 0$
 
-<img src="https://pbs.twimg.com/media/Ef5yDj2X0AIkHEe.jpg" alt="Jason Mayes on Twitter: &quot;The best way to explain #overfitting in  #MachineLearning. Well I am glad we cleared that up. #Fun #ML #TensorFlow  #Visual #TensorFlowJS https://t.co/nZZenunLFU&quot; / Twitter" style="zoom: 33%;" />
+   $GI(Temperature, Mild) = 1 - (\dfrac{1}{2})^2 - (\dfrac{1}{2})^2 = 0.5$
 
-由於只對資料集的資料有作用，因此若在預判不是資料集的資料時，很容易出現預判失敗的問題。
+   $GI(Temperature, Cold) = 1 - (\dfrac{1}{1})^2 - (\dfrac{0}{1})^2 = 0$
+
+   $GI(Temperature) = \dfrac{2}{5} \times 0 + \dfrac{2}{5}\times 0.5 + \dfrac{1}{5}\times 0 = 0.2$
+
+2. 考慮 Humidity
+
+   $GI(Humidity, High) = 1 - (\dfrac{0}{3})^2 - (\dfrac{3}{3})^2 = 0$
+
+   $GI(Humidity, Normal) = 1 - (\dfrac{2}{2})^2-(\dfrac{0}{2})^2 = 0$
+
+   $GI(Humidity) = \dfrac{3}{5} \times 0 + \dfrac{2}{5} \times 0 = 0$
+
+3. 考慮 Wind
+
+   $GI(Wind, True) = 1 - (\dfrac{1}{2})^2 - (\dfrac{1}{2})^2 = 0.5$
+
+   $GI(Wind, False) = 1 - (\dfrac{1}{3})^2 - (\dfrac{2}{3})^2 \approx 0.444$
+
+   $GI(Wind) = \dfrac{2}{5}\times 0.5 + \dfrac{3}{5} \times 0.444 \approx 0.466$
+
+選擇最低的 GI 來當作分割標準，故選擇 Humidity 當作分割節點。
+
+<img src="https://i.imgur.com/PGAX4Zl.png" alt="image-20220410142044809" style="zoom:67%;" />
 
 
 
-### 迴避 Overfitting 的方法
+考慮固定 Rainy，計算剩餘的 Temperature, Humidity, Wind。
 
-迴避 Overfitting 可以使用剪枝來迴避，分成先剪枝（prepruning）與後剪枝（postpruning）。
+1. 考慮 Temperature
 
-1. 先剪枝：可以設定一個條件，使得後面的子樹停止構建，當前的節點變成葉節點。
+   $GI(Temperature, Mild) = 1 - (\dfrac{2}{3})^2 - (\dfrac{1}{3})^2 \approx 0.444$
 
-2. 後剪枝：先建照一個完整的決策樹，再將這個樹進行修剪。
+   $GI(Temperature, Cold) = 1 - (\dfrac{1}{2})^2 - (\dfrac{1}{2})^2 = 0.5$
 
-當然，資料集也很重要，所以如同 data mining 一樣，需要對資料集的品質有所把持。
+   $GI(Temperature) = \dfrac{3}{5}\times 0.444 + \dfrac{2}{5}\times 0.5 = 0.4664$
+
+2. 考慮 Humidity
+
+   $GI(Humidity, High) = 1 - (\dfrac{1}{2})^2 - (\dfrac{1}{2})^2 = 0.5$
+
+   $GI(Humidity, Normal) = 1 - (\dfrac{2}{3})^2 - (\dfrac{1}{3})^2 \approx 0.444$
+
+   $GI(Humidity) = \dfrac{3}{5}\times 0.444 + \dfrac{2}{5}\times 0.5 = 0.4664$
+
+3. 考慮 Wind
+
+   $GI(Wind, True) = 1 - (\dfrac{0}{2})^2 - (\dfrac{2}{2})^2 = 0$
+
+   $GI(Wind, False) = 1 - (\dfrac{3}{3})^2 - (\dfrac{0}{3})^2 = 0$
+
+   $GI(Wind) = \dfrac{2}{5}\times 0 + \dfrac{3}{5}\times 0 = 0$
+
+選擇最低的 GI 來當作分割標準，故選擇 Wind 當作分割節點。
+
+<img src="https://i.imgur.com/f6LkQXO.png" alt="image-20220410143519638" style="zoom:67%;" />
+
+此時分割已完成。
 
 
 
+## 迴歸樹
+
+迴歸樹是決策樹的一種種類，用來預判在某一種情況下時，能夠對應到的效果。
+
+輸出值為連續變數，運作方式與分類樹較相同，與分類樹不同的地方是：
+
+1. 對於一個二維的座標軸來說，迴歸樹通常是預判在這個二維座標軸特定條件所形成的一個長方形區塊內資料的平均值，
+2. 判斷一個長方形區塊內資料的純度，使用了殘差平方和，定義為 $\displaystyle RSS = \sum^{n}_{i=1}(y_i - f(x_i))^2$。
+3. 使用均方根誤差來測量效能。
+
+
+
+### Cost Complexity Pruning
+
+> Reference: https://www.youtube.com/watch?v=D0efHEJsfHo
+
+
+
+迴歸樹運作原理與分類樹較相同，但也同時會出現 over fitting 的問題。
+
+為了避免 over fitting 的問題發生，需要對這棵樹進行適當的剪枝，以利於資料的預判。
+
+
+
+對於剪枝的評斷，我們需要先窮舉每一種剪枝的方式，得到剪枝序列
+
+根據每個序列每個區塊，做一次 $RSS$ 的測量總和，再計算一種基於 $RSS$ 出現的 Tree Score，定義為：
+$$
+Tree Score = RSS + aT
+$$
+其中 $a$ 為一微調參數，且 $T$ 為葉節點樹量。
+
+找到這個參數 $a$ 的方式是透過微調 $a$ 來使當前的樹算出的 Tree Score 變小。
+
+再只使用測試資料來做幾次交叉測試，找出能夠使 $RSS$ 平均最小的子樹，即為最佳剪枝樹。
+
+
+
+## Random Forest
+
+> Reference:
+>
+> 1. https://www.youtube.com/watch?v=J4Wdy0Wc_xQ
+> 2. https://www.youtube.com/watch?v=sQ870aTKqiM
+
+
+
+Random Forest 是一種包含多種決策樹的分類器，輸出的類別取決於所有決策樹的結果統計出的眾數。
+
+大致上來說，Random Forest 使用以下的演算法：
+
+1. 建立 bootstrapped table，隨機抽取一定數量的樣本來建立。
+2. 建立決策樹的父節點，使用隨機不重複的變數來建立。
+3. 重複第一步與第二步，利用這樣的方式建立多棵決策樹。
+
+接下來即可將樣本丟入隨機森林，蒐集每一棵決策樹所產生出的結果，以及找出結果眾數。
+
+
+
+### Bagging
+
+我們將樣本隨機抽取來建立 bootstrapped table，然後利用總計來得出結果，這樣的方式稱為 Bagging。
+
+
+
+### Out-of-bag dataset
+
+由於我們前面說到，建立 bootstrapped table 的方式是使用隨機抽樣，那麼隨機抽樣這一步有可能會出現沒有抽到的資料。
+
+我們將這些資料蒐集起來，稱為 Out-of-bag dataset。
+
+
+
+處理這些 Out-of-bag dataset 的方式是，我們可以把這些資料集丟回去隨機森林，來確定所有的樹是否都回傳同一個結果。
+
+就可以用這些結果來測量隨機森林的準確度，至於 Out-of-bag dataset 分類錯誤的部分即稱為 Out-of-bag error。
+
+
+
+我們可以測量準確度，再來校正隨機抽取樣本的數量，來校正隨機森林。
+
+
+
+### Missing Data
+
+對於 Random Forest 的缺值問題，主要分成兩種。
+
+1. 知道結果、但不知道資料變數的某些值。
+2. 不知道結果、但也不知道資料變數的某些值。
+
+對於這兩種問題，可以分成兩種不同的方式來解決。
+
+
+
+#### 缺值問題 1
+
+我們可以先根據先前的資料集進行投票，並且去尋找相似的先前資料來設定值，再逐步調整。
+
+逐步調整的方式可以利用 updated proximity matrix 來調整，經過多次迭代之後找到一個再迭代後也變化不大的結果。
+
+
+
+#### 缺值問題 2
+
+我們可以根據剩餘的資料來進行建立隨機森林。
+
+建立模型後，先是使用第一個缺值問題的方式來設定變數值，以及窮舉所有可能出現的結果，產生出多個候選資料。
+
+將這些候選資料丟入模型進行預判，來得到隨機森林對於哪一種結果有更高的投票數，即可選定投票結果。
