@@ -22,5 +22,5 @@
 | 資料倉儲（Data Warehouse） |       100%       | 2022 / 04 / 04 |
 |  資料探勘（Data Mining）   |       100%       | 2022 / 04 / 05 |
 |  決策樹（Decision Tree）   |       100%       | 2022 / 04 / 12 |
-|     迴歸（Regression）     |      57.2%       |                |
+|     迴歸（Regression）     |       100%       | 2022 / 04 / 14 |
 
