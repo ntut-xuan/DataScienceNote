@@ -28,7 +28,7 @@
 |          決策樹（Decision Tree）           |   100%   |  SKIP   | 2022 / 04 / 12 |
 |             迴歸（Regression）             |   100%   |  SKIP   | 2022 / 04 / 14 |
 |      單純貝氏（Naïve Bayes Analysis）      |   100%   |   OK    | 2022 / 06 / 15 |
-| 人工神經網路（Artificial Neural Networks） |   50%    |         |                |
+| 人工神經網路（Artificial Neural Networks） |   100%   |   OK    | 2022 / 06 / 15 |
 |        聚類分析（Cluster Analysis）        |    0%    |         |                |
 |      資料預處理（Data Preprocessing）      |    0%    |         |                |
 |     推薦系統（Recommandation System）      |    0%    |         |                |
