@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 
 class MultinomialNaiveBayesClassifier:
@@ -56,3 +57,165 @@ class MultinomialNaiveBayesClassifier:
                 predict[v] *= float(result_dict_s[s] / int(total))
         print(predict)
         return max(predict, key=predict.get)
+
+
+class UPGMAClustering:
+
+    def __init__(self, n_clusters=2):
+        self.labels_ = None
+        self.n = None
+        self.n_clusters = n_clusters
+        self.cluster_list = None
+        self.distance_table = None
+        self.threshold = None
+
+    def fit(self, distance_table):
+        self.n = len(distance_table)
+        self.distance_table = distance_table
+        self.cluster_list = []
+        self.threshold = []
+        self.labels_ = [0 for _ in range(self.n)]
+        for i in range(self.n):
+            self.cluster_list.append([i])
+
+    def clustering(self):
+        for r in range(self.n - (self.n_clusters-1)):
+
+            print("\n=============== Iter%5d ===============\n" % (r + 1))
+
+            original_cluster_list = copy.deepcopy(self.cluster_list)
+            self.distance_table[self.distance_table == 0] = np.iinfo(np.int32).max
+
+            # choose minimum pair
+            minimum_distance = np.min(self.distance_table)
+            minimum_pair = np.unravel_index(np.argmin(self.distance_table, axis=None), self.distance_table.shape)
+            print("Minimum pair: %s = %d" % (str(minimum_pair), minimum_distance))
+
+            if r != self.n - self.n_clusters:
+
+                # combine two cluster
+                target_list1 = copy.deepcopy(self.cluster_list[minimum_pair[0]])
+                target_list2 = copy.deepcopy(self.cluster_list[minimum_pair[1]])
+                self.cluster_list[minimum_pair[0]] += (self.cluster_list[minimum_pair[1]])
+                self.cluster_list.remove(self.cluster_list[minimum_pair[1]])
+
+                print("target list l1=", target_list1, "- l2=", target_list2)
+                print("combine list", original_cluster_list, "->", self.cluster_list)
+
+                # recalculate distance between new cluster and another cluster
+                self.distance_table[self.distance_table == np.iinfo(np.int32).max] = 0
+                new_distance_table = np.zeros((len(self.cluster_list), len(self.cluster_list)))
+                for i in range(len(self.cluster_list)):
+                    for j in range(len(self.cluster_list)):
+                        index1 = original_cluster_list.index(target_list1)
+                        index2 = original_cluster_list.index(target_list2)
+                        index4 = self.cluster_list.index(self.cluster_list[j])
+                        if i == index1 or j == index1:
+                            if index1 == index4:
+                                continue
+                            index3 = original_cluster_list.index(self.cluster_list[j])
+                            distance1 = self.distance_table[index1][index3]
+                            distance2 = self.distance_table[index2][index3]
+                            new_distance_table[index1][index4] = (len(target_list1) * distance1 + len(
+                                target_list2) * distance2) / float(len(target_list1) + len(target_list2))
+                            new_distance_table[index4][index1] = (len(target_list1) * distance1 + len(
+                                target_list2) * distance2) / float(len(target_list1) + len(target_list2))
+                        else:
+                            index3 = original_cluster_list.index(self.cluster_list[j])
+                            index5 = original_cluster_list.index(self.cluster_list[i])
+                            new_distance_table[i][j] = self.distance_table[index5][index3]
+
+                self.distance_table = new_distance_table
+
+                # print
+                print("Update Table\n", str(new_distance_table))
+                print(self.cluster_list)
+
+            # calculate branch length estimation
+            branch_length_estimation = minimum_distance / 2.0
+            self.threshold += [branch_length_estimation]
+            print("distance_threshold =", branch_length_estimation)
+
+        for i in range(len(self.cluster_list)):
+            for v in self.cluster_list[i]:
+                self.labels_[v] = i+1
+
+
+class WPGMAClustering:
+
+    def __init__(self, n_clusters=2):
+        self.labels_ = None
+        self.n = None
+        self.n_clusters = n_clusters
+        self.cluster_list = None
+        self.distance_table = None
+        self.threshold = None
+
+    def fit(self, distance_table):
+        self.n = len(distance_table)
+        self.distance_table = distance_table
+        self.cluster_list = []
+        self.threshold = []
+        self.labels_ = [0 for _ in range(self.n)]
+        for i in range(self.n):
+            self.cluster_list.append([i])
+
+    def clustering(self):
+        for r in range(self.n - (self.n_clusters-1)):
+
+            print("\n=============== Iter%5d ===============\n" % (r + 1))
+
+            original_cluster_list = copy.deepcopy(self.cluster_list)
+            self.distance_table[self.distance_table == 0] = np.iinfo(np.int32).max
+
+            # choose minimum pair
+            minimum_distance = np.min(self.distance_table)
+            minimum_pair = np.unravel_index(np.argmin(self.distance_table, axis=None), self.distance_table.shape)
+            print("Minimum pair: %s = %d" % (str(minimum_pair), minimum_distance))
+
+            if r != self.n - self.n_clusters:
+
+                # combine two cluster
+                target_list1 = copy.deepcopy(self.cluster_list[minimum_pair[0]])
+                target_list2 = copy.deepcopy(self.cluster_list[minimum_pair[1]])
+                self.cluster_list[minimum_pair[0]] += (self.cluster_list[minimum_pair[1]])
+                self.cluster_list.remove(self.cluster_list[minimum_pair[1]])
+
+                print("target list l1=", target_list1, "- l2=", target_list2)
+                print("combine list", original_cluster_list, "->", self.cluster_list)
+
+                # recalculate distance between new cluster and another cluster
+                self.distance_table[self.distance_table == np.iinfo(np.int32).max] = 0
+                new_distance_table = np.zeros((len(self.cluster_list), len(self.cluster_list)))
+                for i in range(len(self.cluster_list)):
+                    for j in range(len(self.cluster_list)):
+                        index1 = original_cluster_list.index(target_list1)
+                        index2 = original_cluster_list.index(target_list2)
+                        index4 = self.cluster_list.index(self.cluster_list[j])
+                        if i == index1 or j == index1:
+                            if index1 == index4:
+                                continue
+                            index3 = original_cluster_list.index(self.cluster_list[j])
+                            distance1 = self.distance_table[index1][index3]
+                            distance2 = self.distance_table[index2][index3]
+                            new_distance_table[index1][index4] = (distance1 + distance2) / 2.0
+                            new_distance_table[index4][index1] = (distance1 + distance2) / 2.0
+                        else:
+                            index3 = original_cluster_list.index(self.cluster_list[j])
+                            index5 = original_cluster_list.index(self.cluster_list[i])
+                            new_distance_table[i][j] = self.distance_table[index5][index3]
+
+                self.distance_table = new_distance_table
+
+                # print
+                print("Update Table\n", str(new_distance_table))
+                print(self.cluster_list)
+
+            # calculate branch length estimation
+            branch_length_estimation = minimum_distance / 2.0
+            self.threshold += [branch_length_estimation]
+            print("distance_threshold =", branch_length_estimation)
+
+        for i in range(len(self.cluster_list)):
+            for v in self.cluster_list[i]:
+                self.labels_[v] = i+1
