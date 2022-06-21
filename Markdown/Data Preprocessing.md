@@ -1,5 +1,9 @@
 # 資料預處理（Data Preprocessing）
 
+> Reference：
+>
+> 1. Data Preprocessing by Dr. Tun-Wen Pai
+
 ## 資料預處理
 
 對於一個資料集來說，若數值偏大或偏小的情況下，我們很難去做資料視覺化，甚至資料過大時會讓自然指數過大導致 overflow。
